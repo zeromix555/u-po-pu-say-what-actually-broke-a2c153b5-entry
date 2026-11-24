@@ -12,4 +12,13 @@ const OUT = "/output/entry.txt";
 
 mkdirSync(dirname(OUT), { recursive: true });
 writeFileSync(OUT, ENTRY, "utf8");
-console.log(`Wrote ${ENTRY.length} characters to ${OUT}`);
+
+// Self-check: the gate requires 1-200 UTF-8 characters, one line, not blank.
+import { readFileSync } from "node:fs";
+const written = readFileSync(OUT, "utf8");
+const chars = [...written].length;
+if (chars < 1 || chars > 200 || written.includes("\n") || written.trim().length === 0) {
+  console.error(`Invalid entry: ${chars} characters`);
+  process.exit(1);
+}
+console.log(`Wrote ${chars} characters to ${OUT}`);
